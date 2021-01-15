@@ -1,9 +1,11 @@
 package com.princeoo.forum.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.princeoo.forum.service.UserInfoService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user-info")
 public class UserInfoController {
+
+    @Resource
+    private UserInfoService userInfoService;
+
+
 
 }
 
