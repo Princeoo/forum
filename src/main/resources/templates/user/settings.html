@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>用户中心</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <style>
+        #table-title tr th{
+            border: none;
+        }
+    </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<div th:replace="~{common/header::header(activeUrl='user')}"></div>
+
+<main role="main" class="container">
+
+    <div class="row" id="vueList">
+
+        <div th:replace="~{user/index::userShowPanel}"></div>
+
+        <div class="col-md-9 blog-main">
+
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+
+                <!-- 隐藏域 -->
+                <input type="hidden" name="uid" ref="uid"
+                       th:value="${session.loginUser.getUid()}">
+
+                <form class="needs-validation" novalidate="" >
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nickname">用户昵称</label>
+                            <input ref="nickname" :value="(info.nickname)" type="text" value="" name="nickname" class="form-control" id="nickname" placeholder="遇见狂神说" required="">
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="realname">真实姓名</label>
+                            <input ref="realname" :value="(info.realname)" type="text"  name="realname" class="form-control" id="realname" placeholder="xxxx" required="">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="qq">QQ</label>
+                            <input ref="qq" :value="(info.qq)" type="text"  name="qq" class="form-control" id="qq" placeholder="遇见狂神说" required="">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="wechat">WeChat</label>
+                            <input ref="wechat" :value="(info.wechat)" type="text" name="wechat" class="form-control" id="wechat" placeholder="xxxx" required="">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email">邮箱</label>
+                            <input ref="email" :value="(info.email)" type="email"  name="email" class="form-control" id="email" placeholder="kuangshen@qq.com">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="phone">手机</label>
+                            <input ref="phone" :value="(info.phone)" type="text"  name="phone" class="form-control" id="phone" placeholder="123 3333 2222">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="work">工作</label>
+                        <input ref="work" :value="(info.work)" type="text" name="work" class="form-control" id="work" placeholder="Java高级程序员">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address">地址</label>
+                        <input ref="address" :value="(info.address)" type="text"  name="address" class="form-control" id="address" placeholder="中国 重庆">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="hobby">爱好(使用英文逗号隔开)</label>
+                        <input ref="hobby" :value="(info.hobby)" type="text" name="hobby" class="form-control" id="hobby" placeholder="代码,唱歌,游戏">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>自我介绍</label>
+                        <textarea ref="intro" :value="(info.intro)"  type="text" name="intro" class="form-control"></textarea>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" v-on:click="postApiData()"> 更新资料 </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<div th:replace="~{common/footer::footer}"></div>
+
+<a class="to-top">返回顶部</a>
+<script th:src="@{/js/vue.min.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+
+<!-- layer 赞赏码 -->
+<script th:src="@{/layer/layer.js}"></script>
+<script th:src="@{/js/axios.js}"></script>
+
+<script>
+    // 后台读取
+    function donate(){
+        axios.get('/user/donate/1').then(response => {
+            console.log()
+            layer.photos({
+                photos: response.data,
+                anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            })
+        })
+    }
+
+    new Vue({
+      el:'#vueList',
+      data:{
+        info: []  //搜索的结果
+      },
+      methods: {
+        getForumcategory() {
+          // //对接后端接口
+          axios.get('/user-info/'+this.$refs.authorId.value).then(response=>{
+            this.info = response.data.content[0]
+            console.log(this.info)
+          })
+        },
+        postApiData:function() {
+          var url = '/user-info/update'
+          // post有两个参数
+          //参数1:请求的路径
+          //参数2:提交的参数
+          //提交参数的两种形态:
+          //          1.可以直接传入字符串 name=张三&age=19
+          //          2.可以以对象的形式传入{name:"三",age:19}
+          axios.post(url,
+            {
+              address:this.$refs.authorId.value,
+              email:this.$refs.email.value,
+              hobby:this.$refs.hobby.value,
+              intro:this.$refs.intro.value,
+              nickname:this.$refs.nickname.value,
+              phone:this.$refs.phone.value,
+              qq:this.$refs.qq.value,
+              realname:this.$refs.realname.value,
+              uid:this.$refs.uid.value,
+              wechat:this.$refs.wechat.value,
+              work:this.$refs.work.value,
+              address:this.$refs.address.value
+            }
+          ).then(response=>{
+              this.results = response.data
+              alert(this.results.msg);
+            }
+          )
+          return false
+        },
+      },
+      mounted(){
+        this.getForumcategory()
+      }
+    })
+</script>
+
+
+</body>
+</html>

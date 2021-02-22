@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>头像修改-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+</head>
+
+<body style="background: #f2f2f2;">
+
+<div th:replace="~{common/header::header(activeUrl='user')}"></div>
+
+<main role="main" class="container">
+    <div class="row">
+        <div th:replace="~{user/index::userShowPanel}"></div>
+        <div class="col-md-9 blog-main">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+
+
+
+
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<div th:replace="~{common/footer::footer}"></div>
+<a class="to-top">返回顶部</a>
+
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- layer 赞赏码 -->
+<script th:src="@{/layer/layer.js}"></script>
+<script th:src="@{/js/axios.js}"></script>
+
+<script>
+    // 后台读取
+    function donate(){
+        axios.get('/user/donate/1').then(response => {
+            console.log();
+            layer.photos({
+                photos: response.data,
+                anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+        })
+    }
+</script>
+
+</body>
+</html>

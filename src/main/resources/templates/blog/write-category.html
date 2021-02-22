@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:selected="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>问答-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"/>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+
+    <style>
+        .nav-underline .nav-link {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: .875rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<!-- 导航栏 -->
+<div th:replace="~{common/header::header(activeUrl='blog')}"></div>
+
+<main role="main" class="container mt-3 p-3 bg-white rounded">
+    <div class="row" id="vueList">
+        <div class="col-md-12 blog-main">
+            <div class="col-md-12 order-md-1">
+                <h4 class="mb-3">新增主题分类</h4>
+
+                <form class="needs-validation" action="#" method="post">
+                    <!-- 隐藏域 -->
+                    <input type="hidden" name="authorId" ref="authorId"
+                    th:value="${session.loginUser.getUid()}">
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <input ref="title" type="text" name="title" class="form-control" id="firstName" value="" required>
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-primary btn-lg btn-block" type="button" v-on:click="postApiData()">新增主题分类</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{common/footer::footer}"></div>
+
+<a class="to-top">返回顶部</a>
+
+
+<script th:src="@{/js/vue.min.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+<script th:src="@{/editormd/editormd.js}"></script>
+<script>
+
+
+
+ function getEditormd() {
+    var testEditor
+    testEditor = editormd('blog-content', {
+      width : '100%',
+      height : 500,
+      syncScrolling : 'single',
+      path : '/editormd/lib/',
+      saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+      // [TOCM]  [TOC] 自动生成目录
+      tocm : true,
+      tocContainer : '',
+      tocDropdown   : false,
+      tocStartLevel : 1,     // Parse beginning of H2, Default value 1
+      emoji: true,
+      tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+      flowChart : true,             // 开启流程图支持，默认关闭
+      sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+      //图片上传
+      imageUpload : true,
+      imageFormats : ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'],
+      imageUploadURL : '/question/write/file/upload',
+      onload : function() {
+        console.log('onload', this)
+      },
+      /*指定需要显示的功能按钮*/
+      toolbarIcons : function() {
+        return ['undo','redo','|',
+          'bold','del','italic','quote','ucwords','uppercase','lowercase','|',
+          'list-ul','list-ol','hr','|',
+          'link','reference-link','image',
+          'code-block','table','datetime','emoji','html-entities','|',
+          'search','watch','preview','fullscreen']
+      },
+      onfullscreen : function() {
+        console.log('onfullscreen')
+        document.getElementsByClassName('navbar')[0].style.display='none'
+      },
+      onfullscreenExit : function() {
+        console.log('onfullscreenExit')
+        document.getElementsByClassName('navbar')[0].style.display=''
+      }
+    })
+  }
+
+  new Vue({
+    el:'#vueList',
+    data:{
+      results: []  //搜索的结果
+    },
+    methods: {
+      postApiData:function() {
+         var url = '/forum/insertForum'
+            // post有两个参数
+         //参数1:请求的路径
+         //参数2:提交的参数
+         //提交参数的两种形态:
+         //          1.可以直接传入字符串 name=张三&age=19
+         //          2.可以以对象的形式传入{name:"三",age:19}
+             axios.post(url,
+               {
+                 authorId:this.$refs.authorId.value,
+                 title:this.$refs.title.value,
+                 categoryId:this.$refs.categoryId.value,
+                 content:this.$refs.content.value,
+               }
+               ).then(response=>{
+               this.results = response.data
+                 alert(this.results.msg)
+             }
+             // then(function(res) {
+             //      var resData = res.data
+             //      if(resData.status == '200') { //0表示成功，1表示失败
+             //             alert(resData.message)
+             //        }else{
+             //             alert(resData.message)
+             //        }
+             //   }
+               )
+        return false;
+         },
+      getForumcategory() {
+        // //对接后端接口
+        axios.get('/forum-category').then(response=>{
+          this.results = response.data
+          console.log(this.results.content[0].categoryName)
+        })
+
+      }
+    },
+    mounted(){
+      this.getForumcategory()
+    },
+    updated(){
+      getEditormd()
+    }
+  })
+
+
+
+
+
+</script>
+
+</body>
+</html>

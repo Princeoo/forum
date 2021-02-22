@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.princeoo.forum.message.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,7 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("tk_forum_category")
 @ApiModel(value="ForumCategory对象", description="")
-public class ForumCategory implements Serializable {
+public class ForumCategory extends Entity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +33,7 @@ public class ForumCategory implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "论坛分类")
+    @ApiModelProperty(value = "论坛主题名称")
     private String category;
 
 

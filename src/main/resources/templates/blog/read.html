@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>问答-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <style>
+        .nav-underline .nav-link {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: .875rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<!-- 导航栏 -->
+<div th:replace="~{common/header::header(activeUrl='blog')}"></div>
+
+<main role="main" class="container mt-3 p-3 bg-white rounded">
+    <div class="row" id="vueList">
+        <div class="col-md-12 blog-main">
+            <input type="hidden" name="refAuthorId" id="refAuthorId" ref="refAuthorId"
+                   th:value="${session.loginUser.getUid()}">
+            <div class="blog-post">
+                <h2 class="blog-post-title" >
+                    {{results.title}}
+                </h2>
+                <p class="blog-post-meta">
+                    <span >
+                        {{dateFormat(results.gmtUpdate)}}
+                    </span>
+                    by
+                    <a href="#" ></a>
+                    <span>
+                        <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+<path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+</svg>
+                        {{results.views}}
+                    </span>
+                    <!-- 自己写的文章可以编辑和删除 -->
+                    <a v-if="(results.authorId) == sessionId || (results.roleId) == 1"
+                       class="float-right" style="color: red"
+                       v-on:click="deleteForum()"
+                       th:href="@{'/jump/forumList'}"
+                      >
+<!--                        th:if="${session.loginUser.getUid()==blog.getAuthorId()}"-->
+<!--                        th:href="@{'/blog/delete/'+${session.loginUser.getUid()}+'/'+${blog.getBid()}}"-->
+<!--                        onclick="if(!confirm('你确认要删除吗？')) return false;"-->
+                        <svg class="bi bi-x-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                        </svg>
+                        删除
+                    </a>
+                    <a v-if="(results.authorId) == sessionId || (results.roleId) == 1"
+                       class="float-right mr-3"
+                       :href="'/jump/editForumList/'+(results.bid)"
+                    >
+<!--                        th:if="${session.loginUser.getUid()==blog.getAuthorId()}"-->
+<!--                        th:href="@{'/blog/editor/'+${session.loginUser.getUid()}+'/'+${blog.getBid()}}"-->
+                        <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                        编辑
+                    </a>
+                </p>
+            </div>
+
+            <hr style="margin-top: 18px">
+
+            <!--文章主体内容-->
+            <div id="doc-content">
+                <textarea style="display:none;" placeholder="markdown">
+                    {{results.content}}
+                </textarea>
+<!--                th:text="${blog.getContent()}"-->
+            </div>
+
+        </div>
+
+        <div class="col-md-12 blog-main" style="margin-top: 20px">
+            <hr>
+        </div>
+
+        <div class="col-md-12 blog-main" style="margin-top: 20px">
+            <form >
+                <input type="hidden" name="userId" ref="userId" >
+                <input type="hidden" name="userName" ref="userName">
+                <input type="hidden" name="userAvatar" ref="userAvatar" >
+                <input type="hidden" name="topicId" >
+                <div class="form-group">
+                    <textarea ref="content"  name="content" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary float-right"  v-on:click="postApiData()">提交评论</button>
+            </form>
+        </div>
+
+        <div  class="col-md-12 blog-main" style="margin-top: 20px">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <h6 class="border-bottom border-gray pb-2 mb-0">评论列表</h6>
+            <div  v-for="comment in comments">
+                <div  class="media text-muted pt-3" >
+                    <img  style="border-radius: 5px;margin-right: 5px " width="32" height="32" :src="(comment.avatar)">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark" >
+                            {{comment.nickname}}
+                        </strong>
+                        <span >
+                            {{comment.content}}
+                        </span>
+                        <span style="color: #313ef2">
+                           点击回复
+                        </span>
+
+                        <span class="badge badge-light float-right">
+                           {{dateFormat(comment.createTime)}}
+                        </span>
+                    </p>
+                </div>
+                <div  class="media text-muted pt-3 col-md-12 col-md-offset-3"   v-for="reply in comment.replyComments">
+                    <!--                    th:each="comment:${commentList}"-->
+                    <img  style="border-radius: 5px;margin-right: 5px " width="32" height="32" :src="(comment.avatar)">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark" >
+                            {{reply.nickname}}
+                            <span style="color: #6610f2">
+                            回复
+                            </span>
+                            {{reply.parentNickname}}
+                        </strong>
+                        <span >
+                           {{reply.content}}
+                        </span>
+                        <span style="color: #313ef2">
+                           点击回复
+                        </span>
+                        <span class="badge badge-light float-right">
+                            {{dateFormat(reply.createTime)}}
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+            </div>
+        </div>
+<!--        <div th:if="${commentList.size()==0}" class="col-md-12 blog-main" style="margin-top: 20px">-->
+<!--            <div class="my-3 p-3 bg-white rounded shadow-sm">-->
+<!--                <h6 class="pb-2 mb-0 text-center">emmm... 这里暂时还没有评论....</h6>-->
+<!--            </div>-->
+<!--        </div>-->
+
+    </div>
+
+
+</main>
+
+<div th:replace="~{common/footer::footer}"></div>
+
+<a class="to-top">返回顶部</a>
+
+<script th:src="@{/js/vue.min.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+
+<link rel="stylesheet" th:href="@{/editormd/css/editormd.preview.css}" />
+<script th:src="@{/editormd/lib/marked.min.js}"></script>
+<script th:src="@{/editormd/lib/prettify.min.js}"></script>
+<script th:src="@{/editormd/lib/raphael.min.js}"></script>
+<script th:src="@{/editormd/lib/underscore.min.js}"></script>
+<script th:src="@{/editormd/lib/sequence-diagram.min.js}"></script>
+<script th:src="@{/editormd/lib/flowchart.min.js}"></script>
+<script th:src="@{/editormd/lib/jquery.flowchart.min.js}"></script>
+<script th:src="@{/editormd/editormd.js}"></script>
+
+<script type="text/javascript">
+     var testEditor;
+     var user_id = document.getElementById("refAuthorId").value;;
+    function getEditormd() {
+        testEditor = editormd.markdownToHTML('doc-content', {//注意：这里是上面DIV的id
+            htmlDecode: 'style,script,iframe',
+            emoji: true,
+            taskList: true,
+            tocm: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
+        })}
+
+    new Vue({
+      el:'#vueList',
+      data:{
+        results: [],  //搜索的结果
+        comments: [],
+        sessionId: user_id
+      },
+      methods: {
+        postApiData:function() {
+          var url = '/forum-comment/insertComment'
+          // post有两个参数
+          //参数1:请求的路径
+          //参数2:提交的参数
+          //提交参数的两种形态:
+          //          1.可以直接传入字符串 name=张三&age=19
+          //          2.可以以对象的形式传入{name:"三",age:19}
+          axios.post(url,
+            {
+              content:this.$refs.content.value
+            }
+          ).then(response=>{
+              this.results = response.data
+              console.log(this.results)
+            }
+            // then(function(res) {
+            //      var resData = res.data
+            //      if(resData.status == '200') { //0表示成功，1表示失败
+            //             alert(resData.message)
+            //        }else{
+            //             alert(resData.message)
+            //        }
+            //   }
+          )
+        },
+        deleteForum:function() {
+          if(!confirm('你确认要删除吗？')) {
+            // //对接后端接口
+            axios.get('/forum/deleteForumByBid').then(response => {
+              this.results = response.data
+              alert(this.results.msg)
+            })
+          }
+        },
+        getForum() {
+          // //对接后端接口
+          axios.get('/forum/queryForumByBid').then(response=>{
+            this.results = response.data
+            console.log(this.results)
+          })
+        },
+        getComment() {
+          // //对接后端接口
+          axios.get('/forum-comment').then(response=>{
+            this.comments = response.data
+            console.log(this.comments)
+          })
+        },
+        dateFormat:function(time) {
+          var date=new Date(time)
+          var year=date.getFullYear()
+          /* 在日期格式中，月份是从0开始的，因此要加0
+           * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+           * */
+          var month= date.getMonth()+1<10 ? '0'+(date.getMonth()+1) : date.getMonth()+1
+          var day=date.getDate()<10 ? '0'+date.getDate() : date.getDate()
+          var hours=date.getHours()<10 ? '0'+date.getHours() : date.getHours()
+          var minutes=date.getMinutes()<10 ? '0'+date.getMinutes() : date.getMinutes()
+          var seconds=date.getSeconds()<10 ? '0'+date.getSeconds() : date.getSeconds()
+          // 拼接
+          return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds
+        }
+      },
+      mounted(){
+        this.getForum()
+        this.getComment()
+      },
+      updated(){
+        getEditormd()
+      }
+    })
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>狂神说-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/timeline.css}">
+</head>
+<body>
+
+<div th:replace="~{common/header::header(activeUrl='say')}"></div>
+
+<main role="main">
+
+    <div class="container">
+
+        <div th:if="${session.loginUser.getRoleId()==1}"
+             class="col-md-12 blog-main" style="margin-top: 20px">
+            <form th:action="@{'/say/'+${session.loginUser.getRoleId()}}" method="post">
+                <div class="col-md-12 mb-3">
+                    <label>标题</label>
+                    <input type="text" name="title" class="form-control" value="" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label>内容</label>
+                    <div id="blog-content">
+                        <textarea required name="content" rows="3" class="form-control"> </textarea>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <button type="submit" class="btn btn-primary btn-sm btn-block">发布闲记</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 主要内容部分 -->
+        <div class="timeline-small">
+            <div class="timeline-small-body">
+                <ul>
+                    <li th:each="say:${sayList}">
+                        <div class="bullet green"></div>
+                        <div class="desc">
+                            <h3>
+                                [[${say.getTitle()}]]
+                                <small class="float-right" th:text="${#dates.format(say.getGmtCreate(),'yyyy-MM-dd')}"></small>
+                            </h3>
+                            <h4 th:utext="${say.getContent()}"></h4>
+                        </div>
+                    </li>
+                </ul>
+                <p class="text-center" style="color: #1F4661"> ...... </p>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div th:replace="~{common/footer::footer}"></div>
+
+<a class="to-top">返回顶部</a>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>资源库-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/download.css}">
+</head>
+<body>
+
+<div th:replace="~{common/header::header(activeUrl='download')}"></div>
+
+<main role="main" class="mt-3">
+    <div class="container">
+        <div class="alert alert-primary" role="alert">
+            资源慢慢日积月累，需要什么可以在群里@我，如果我有就放到这里！
+        </div>
+
+        <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 shadow-sm" th:each="download:${downloadList}">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal" th:text="${download.getDname()}"></h4>
+                </div>
+                <div class="card-body">
+                    <p th:text="${download.getDdesc()}"></p>
+                    <a style="color: white" class="btn btn-sm btn-primary">提取码: [[${download.getDcode()}]]</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{common/footer::footer}"></div>
+
+<a class="to-top">返回顶部</a>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toTop.js}"></script>
+
+</body>
+</html>

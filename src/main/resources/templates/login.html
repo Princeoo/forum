@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>登录-KuangStudy</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body class="text-center">
+
+<form class="form-signin" th:action="@{/login}" method="post">
+
+    <img class="mb-4" th:src="@{/images/logo/logo7272.jpg}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">登录</h1>
+
+    <input name="username" class="form-control" placeholder="用户名" required="">
+    <input type="password" name="password" class="form-control" placeholder="密码" required="">
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="remember" value="remember-me"> 记住密码
+        </label>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">登 录</button>
+
+    <p class="clearfix">
+        <a th:href="@{/jump/register}" class="float-right">没有账号？去注册</a>
+    </p>
+
+    <p class="mt-5 mb-3 text-muted">© DuduLu</p>
+</form>
+
+
+</body>
+</html>
