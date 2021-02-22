@@ -13,7 +13,7 @@
 
     <img class="mb-4" th:src="@{/images/logo/logo7272.jpg}" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">登录</h1>
-
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}">
     <input name="username" class="form-control" placeholder="用户名" required="">
     <input type="password" name="password" class="form-control" placeholder="密码" required="">
 

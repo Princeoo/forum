@@ -68,7 +68,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             //凭证是否过期
             //用户是否可用
             //用户的权限集， 默认需要添加ROLE_ 前缀
-            userDetails=new org.springframework.security.core.userdetails.User(s,password,
+            userDetails=new org.springframework.security.core.userdetails.User
+                    (s,
+                     password,
                     true,
                     true,
                     true,
@@ -77,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userDetails;
     }
 
-    // 获取角色信息
+    // 获取角色信息，拿权限
     private Collection<GrantedAuthority> getAuthorities(User user){
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
         UserRole role = roleService.getById(user.getRoleId());
