@@ -1,15 +1,23 @@
 package com.princeoo.forum.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.princeoo.forum.pojo.User;
 import com.princeoo.forum.service.UserInfoService;
 import com.princeoo.forum.service.UserService;
+import com.princeoo.forum.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Controller
 public class LoginController {
@@ -21,8 +29,19 @@ public class LoginController {
     @Autowired
     UserInfoService userInfoService;
 
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private HttpSession session;
+
     @GetMapping({"/","/index"})
-    public String index(){
+    public String index(Authentication authentication){
+        Map<Object, Object> map = redisUtil.hmget("user");
+        JSONObject jsonObject = JSONObject.parseObject((String)map.get(authentication.getPrincipal()));
+        User user = JSON.toJavaObject(jsonObject,User.class);
+        session.setAttribute("loginUser",user);
         return "index";
     }
 
