@@ -113,4 +113,9 @@ public class JumpController {
     public String jumpUserComment() {
         return "/user/user-comment";
     }
+
+    @GetMapping(value = "/user/file")
+    public String jumpUserFile() {
+        return "/user/update-avatar";
+    }
 }

@@ -9,8 +9,15 @@ public class MyMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:"+System.getProperty("user.dir")+"/upload/");////存储文件的路径
+        String os = System.getProperty("os.name");
+        if (os.toLowerCase().startsWith("win")) {  //如果是Windows系统
+            registry.addResourceHandler("/productPic/**").
+                    addResourceLocations("file:D:/uploadBaseDir/productPic/");
+        }else{//linux和mac系统
+            registry.addResourceHandler("/productPic/**").
+                    addResourceLocations("file:/Users/princegg/Desktop/");
+        }
+        WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 
 }

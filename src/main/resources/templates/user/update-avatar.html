@@ -18,7 +18,13 @@
             <div class="my-3 p-3 bg-white rounded shadow-sm">
 
 
-
+                <form th:action="@{/user-info/fileUpload}" method="post" enctype="multipart/form-data">
+                    <label>上传图片</label>
+                    <input type="file" name="file"/>
+                    <input type="submit" value="上传"/>
+                </form>
+<!--                <p>图片:</p>-->
+<!--                <img src="${filename }"/>-->
 
             </div>
         </div>
@@ -39,16 +45,7 @@
 <script th:src="@{/js/axios.js}"></script>
 
 <script>
-    // 后台读取
-    function donate(){
-        axios.get('/user/donate/1').then(response => {
-            console.log();
-            layer.photos({
-                photos: response.data,
-                anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
-            });
-        })
-    }
+
 </script>
 
 </body>
