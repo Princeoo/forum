@@ -225,9 +225,9 @@ public class ForumController {
 
         if (userRole.getName().equals("admin")) {
             queryWrapper.eq("author_id", authorId);
-            forumService.page(pageParam, null);
-        }else{
             forumService.page(pageParam, queryWrapper);
+        }else{
+            forumService.page(pageParam, null);
         }
         ForumVo forumVo = new ForumVo();
         forumVo.setTotal(pageParam.getTotal());
